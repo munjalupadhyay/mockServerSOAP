@@ -8,11 +8,13 @@ const app = express();
 const calculatorService = require('./services/calculator/calculator');
 const rpBasicAuthService = require('./services/rpBasicAuth/rpBasicAuth');
 const meteringService = require('./services/MeteringService/MeteringService');
+const refParamSoap11Service = require('./services/RefParamSoap11/RefParamSoap11');
 
 // Import file serving modules
 const calculatorFiles = require('./services/calculator/calculatorFiles');
 const rpBasicAuthFiles = require('./services/rpBasicAuth/rpBasicAuthFiles');
 const meteringFiles = require('./services/MeteringService/MeteringServiceFiles');
+const refParamSoap11Files = require('./services/RefParamSoap11/RefParamSoap11Files');
 
 // Middleware to parse XML
 app.use(express.text({ type: 'text/xml' }));
@@ -33,6 +35,11 @@ const SERVICES = {
         ...meteringService.WSDL_CONFIG,
         dir: 'MeteringService',
         handler: meteringService
+    },
+    RefParamSoap11: {
+        ...refParamSoap11Service.WSDL_CONFIG,
+        dir: 'RefParamSoap11',
+        handler: refParamSoap11Service
     }
 };
 
@@ -40,6 +47,7 @@ const SERVICES = {
 app.use('/calculator', calculatorFiles.createFileRouter());
 app.use('/rpBasicAuth', rpBasicAuthFiles.createFileRouter());
 app.use('/MeteringService', meteringFiles.createFileRouter());
+app.use('/RefParamSoap11', refParamSoap11Files.createFileRouter());
 
 // Handle SOAP requests for calculator service
 app.post('/soap/calculator', async (req, res) => {
@@ -54,6 +62,11 @@ app.post('/soap/rpBasicAuth', async (req, res) => {
 // Handle SOAP requests for MeteringService
 app.post('/soap/MeteringService', async (req, res) => {
     await handleSoapRequest('MeteringService', req, res);
+});
+
+// Handle SOAP requests for RefParamSoap11 service
+app.post('/soap/RefParamSoap11', async (req, res) => {
+    await handleSoapRequest('RefParamSoap11', req, res);
 });
 
 // Common SOAP request handler
@@ -111,6 +124,13 @@ async function handleSoapRequest(serviceName, req, res) {
         }
 
         const response = await handleOperation(serviceName, operationName, operationArgs);
+
+        // Check if this is a one-way operation (no response expected)
+        if (response && response.__oneWay) {
+            console.log(`✅ Successfully processed one-way operation ${serviceName}:${operationName}`);
+            res.status(202).send(); // 202 Accepted for one-way operations
+            return;
+        }
 
         const soapResponse = buildSoapResponse(serviceName, operationName, response);
 
@@ -240,6 +260,7 @@ app.get('/', (req, res) => {
                     <li><strong>rpBasicAuth:</strong> process</li>
                     <li><strong>Calculator:</strong> Add, Subtract, Multiply, Divide</li>
                     <li><strong>MeteringService:</strong> echo</li>
+                    <li><strong>RefParamSoap11:</strong> echo, echoOneway</li>
                 </ul>
 
                 <h2>Test Client:</h2>
