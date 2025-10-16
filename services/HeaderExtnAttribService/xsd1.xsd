@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is JAX-WS RI 2.2.10-b140319.1121 svn-revision#7b34660d6bc70e587e8ec81a17e4d76af68816a6. --><xs:schema xmlns:tns="http://mock.service.com/types" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:base="http://mock.service.com/types/base" xmlns:extn="http://mock.service.com/types/extn" targetNamespace="http://mock.service.com/types">
+    <xs:import namespace="http://mock.service.com/types/base" schemaLocation="xsd2.xsd"/>
+    <xs:import namespace="http://mock.service.com/types/extn" schemaLocation="xsd3.xsd"/>
+    <xs:complexType name="echoHeaderType">
+        <xs:sequence>
+            <xs:element ref="base:header"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="echoRequestType">
+        <xs:sequence>
+            <xs:element ref="base:request"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="echoResponseType">
+        <xs:sequence>
+            <xs:element ref="base:response"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="echoHeader" type="tns:echoHeaderType"/>
+    <xs:element name="echoRequest" type="tns:echoRequestType"/>
+    <xs:element name="echoResponse" type="tns:echoResponseType"/>
+</xs:schema>

@@ -22,7 +22,7 @@ function getValue(obj, key) {
 }
 
 // Calculator operation handlers
-function handleOperation(operationName, args) {
+function handleOperation(operationName, args, soapHeader) {
     console.log(`🛠️ Handling calculator operation: ${operationName}`, args);
 
     switch (operationName) {

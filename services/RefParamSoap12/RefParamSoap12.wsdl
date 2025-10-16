@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is JAX-WS RI 2.2.10-b140319.1121 svn-revision#7b34660d6bc70e587e8ec81a17e4d76af68816a6. --><WL5G3N0:definitions xmlns="" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/" xmlns:WL5G3N1="http://wsa/refparam" xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap12/" name="HelloWSASoap12ServiceDefinitions" targetNamespace="http://wsa/refparam">
+  <WL5G3N0:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://wsa/refparam">
+      <xs:element name="echo">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="message" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="echoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="echoOneway">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="msg" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="echo">
+    <WL5G3N0:part element="WL5G3N1:echo" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="echoResponse">
+    <WL5G3N0:part element="WL5G3N1:echoResponse" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:message name="echoOneway">
+    <WL5G3N0:part element="WL5G3N1:echoOneway" name="parameters"/>
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="HelloWSASoap12">
+    <WL5G3N0:operation name="echo" parameterOrder="parameters">
+      <WL5G3N0:input message="WL5G3N1:echo"/>
+      <WL5G3N0:output message="WL5G3N1:echoResponse"/>
+    </WL5G3N0:operation>
+    <WL5G3N0:operation name="echoOneway" parameterOrder="parameters">
+      <WL5G3N0:input message="WL5G3N1:echoOneway"/>
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="HelloWSASoap12ServiceSoapBinding" type="WL5G3N1:HelloWSASoap12">
+    <WL5G3N2:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <WL5G3N0:operation name="echo">
+      <WL5G3N2:operation style="document"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body parts="parameters" use="literal"/>
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body parts="parameters" use="literal"/>
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+    <WL5G3N0:operation name="echoOneway">
+      <WL5G3N2:operation style="document"/>
+      <WL5G3N0:input>
+        <WL5G3N2:body parts="parameters" use="literal"/>
+      </WL5G3N0:input>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="HelloWSASoap12Service">
+    <WL5G3N0:port binding="WL5G3N1:HelloWSASoap12ServiceSoapBinding" name="HelloWSASoap12SoapPort">
+      <WL5G3N2:address location="http://oic-adapters-02.ad1.devintegratiphx.oraclevcn.com:7001/icssoapadaptermockservices/HelloWSARefParam/RefParamSoap12"/>
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

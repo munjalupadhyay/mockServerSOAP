@@ -7,7 +7,7 @@ const WSDL_CONFIG = {
 };
 
 // rpBasicAuth operation handlers
-function handleOperation(operationName, args) {
+function handleOperation(operationName, args, soapHeader) {
     console.log(`🛠️ Handling rpBasicAuth operation: ${operationName}`, args);
 
     switch (operationName) {

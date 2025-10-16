@@ -1,0 +1,8 @@
+[
+  {
+    "operation": "echoHeaderExtnAttributes",
+    "request": "SOAP request with WS-Security headers, custom header and payload",
+    "statusCode": 200,
+    "response": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<S:Envelope xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <S:Header>\n    <ns0:echoHeader xmlns:ns1=\"http://mock.service.com/types/base\" xmlns:ns0=\"http://mock.service.com/types\">\n      <ns1:header>\n        <ns1:record>\n          <ns1:value>\"putin\"</ns1:value>\n        </ns1:record>\n      </ns1:header>\n    </ns0:echoHeader>\n  </S:Header>\n  <S:Body>\n    <ns0:echoResponse xmlns:ns1=\"http://mock.service.com/types/base\" xmlns:ns0=\"http://mock.service.com/types\">\n      <ns1:response>\n        <ns1:record>\n          <ns1:value>\"valdfd \"</ns1:value>\n        </ns1:record>\n      </ns1:response>\n    </ns0:echoResponse>\n  </S:Body>\n</S:Envelope>"
+  }
+]

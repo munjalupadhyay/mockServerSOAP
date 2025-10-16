@@ -9,12 +9,16 @@ const calculatorService = require('./services/calculator/calculator');
 const rpBasicAuthService = require('./services/rpBasicAuth/rpBasicAuth');
 const meteringService = require('./services/MeteringService/MeteringService');
 const refParamSoap11Service = require('./services/RefParamSoap11/RefParamSoap11');
+const refParamSoap12Service = require('./services/RefParamSoap12/RefParamSoap12');
+const headerExtnAttribService = require('./services/HeaderExtnAttribService/HeaderExtnAttribService');
 
 // Import file serving modules
 const calculatorFiles = require('./services/calculator/calculatorFiles');
 const rpBasicAuthFiles = require('./services/rpBasicAuth/rpBasicAuthFiles');
 const meteringFiles = require('./services/MeteringService/MeteringServiceFiles');
 const refParamSoap11Files = require('./services/RefParamSoap11/RefParamSoap11Files');
+const refParamSoap12Files = require('./services/RefParamSoap12/RefParamSoap12Files');
+const headerExtnAttribFiles = require('./services/HeaderExtnAttribService/HeaderExtnAttribServiceFiles');
 
 // Middleware to parse XML
 app.use(express.text({ type: 'text/xml' }));
@@ -40,6 +44,16 @@ const SERVICES = {
         ...refParamSoap11Service.WSDL_CONFIG,
         dir: 'RefParamSoap11',
         handler: refParamSoap11Service
+    },
+    RefParamSoap12: {
+        ...refParamSoap12Service.WSDL_CONFIG,
+        dir: 'RefParamSoap12',
+        handler: refParamSoap12Service
+    },
+    HeaderExtnAttribService: {
+        ...headerExtnAttribService.WSDL_CONFIG,
+        dir: 'HeaderExtnAttribService',
+        handler: headerExtnAttribService
     }
 };
 
@@ -48,6 +62,8 @@ app.use('/calculator', calculatorFiles.createFileRouter());
 app.use('/rpBasicAuth', rpBasicAuthFiles.createFileRouter());
 app.use('/MeteringService', meteringFiles.createFileRouter());
 app.use('/RefParamSoap11', refParamSoap11Files.createFileRouter());
+app.use('/RefParamSoap12', refParamSoap12Files.createFileRouter());
+app.use('/HeaderExtnAttribService', headerExtnAttribFiles.createFileRouter());
 
 // Handle SOAP requests for calculator service
 app.post('/soap/calculator', async (req, res) => {
@@ -69,6 +85,16 @@ app.post('/soap/RefParamSoap11', async (req, res) => {
     await handleSoapRequest('RefParamSoap11', req, res);
 });
 
+// Handle SOAP requests for RefParamSoap12 service
+app.post('/soap/RefParamSoap12', async (req, res) => {
+    await handleSoapRequest('RefParamSoap12', req, res);
+});
+
+// Handle SOAP requests for HeaderExtnAttribService
+app.post('/soap/HeaderExtnAttribService', async (req, res) => {
+    await handleSoapRequest('HeaderExtnAttribService', req, res);
+});
+
 // Common SOAP request handler
 async function handleSoapRequest(serviceName, req, res) {
     try {
@@ -82,9 +108,10 @@ async function handleSoapRequest(serviceName, req, res) {
         const result = await parser.parseStringPromise(req.body);
         console.log('🔍 Parsed SOAP envelope');
 
-        // Extract the SOAP Body and find the operation
+        // Extract the SOAP Body and Header, and find the operation
         // Handle any namespace prefix for the envelope
         let soapBody = null;
+        let soapHeader = null;
         for (const key of Object.keys(result)) {
             if (key.endsWith(':Envelope') || key === 'Envelope') {
                 const envelope = result[key];
@@ -92,7 +119,9 @@ async function handleSoapRequest(serviceName, req, res) {
                 for (const bodyKey of Object.keys(envelope)) {
                     if (bodyKey.endsWith(':Body') || bodyKey === 'Body') {
                         soapBody = envelope[bodyKey];
-                        break;
+                    }
+                    if (bodyKey.endsWith(':Header') || bodyKey === 'Header') {
+                        soapHeader = envelope[bodyKey];
                     }
                 }
                 if (soapBody) break;
@@ -123,7 +152,12 @@ async function handleSoapRequest(serviceName, req, res) {
             }
         }
 
-        const response = await handleOperation(serviceName, operationName, operationArgs);
+        // Special case for HeaderExtnAttribService: use entire body as args
+        if (serviceName === 'HeaderExtnAttribService' && operationName === 'echoHeaderExtnAttributes' && !operationArgs) {
+            operationArgs = soapBody;
+        }
+
+        const response = await handleOperation(serviceName, operationName, operationArgs, soapHeader);
 
         // Check if this is a one-way operation (no response expected)
         if (response && response.__oneWay) {
@@ -168,11 +202,19 @@ function detectOperationForService(serviceName, soapBody) {
         }
     }
 
+    // Special case for HeaderExtnAttribService: if body contains echoRequest, assume it's echoHeaderExtnAttributes
+    if (serviceName === 'HeaderExtnAttribService') {
+        const hasEchoRequest = Object.keys(soapBody).some(key => key.includes('echoRequest'));
+        if (hasEchoRequest) {
+            return 'echoHeaderExtnAttributes';
+        }
+    }
+
     return null;
 }
 
 // Operation handlers
-async function handleOperation(serviceName, operationName, args) {
+async function handleOperation(serviceName, operationName, args, soapHeader) {
     console.log(`🛠️ Handling operation: ${serviceName}:${operationName}`, args);
 
     const service = SERVICES[serviceName];
@@ -180,7 +222,7 @@ async function handleOperation(serviceName, operationName, args) {
         throw new Error(`Unsupported service: ${serviceName}`);
     }
 
-    return await service.handler.handleOperation(operationName, args);
+    return await service.handler.handleOperation(operationName, args, soapHeader);
 }
 
 
@@ -261,6 +303,8 @@ app.get('/', (req, res) => {
                     <li><strong>Calculator:</strong> Add, Subtract, Multiply, Divide</li>
                     <li><strong>MeteringService:</strong> echo</li>
                     <li><strong>RefParamSoap11:</strong> echo, echoOneway</li>
+                    <li><strong>RefParamSoap12:</strong> echo, echoOneway</li>
+                    <li><strong>HeaderExtnAttribService:</strong> echoHeaderExtnAttributes</li>
                 </ul>
 
                 <h2>Test Client:</h2>

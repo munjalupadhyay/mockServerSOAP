@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI (http://jax-ws.java.net). RI's version is JAX-WS RI 2.2.10-b140319.1121 svn-revision#7b34660d6bc70e587e8ec81a17e4d76af68816a6. --><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:base="http://mock.service.com/types/base" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://mock.service.com/types/base">
+    <xs:element name="header" type="base:headerType"/>
+    <xs:element name="request" type="base:requestType"/>
+    <xs:element name="response" type="base:responseType"/>
+    <xs:complexType name="recordType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="value"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="headerType">
+        <xs:sequence>
+            <xs:element type="base:recordType" name="record"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="requestType">
+        <xs:sequence>
+            <xs:element type="base:recordType" name="record"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="responseType">
+        <xs:sequence>
+            <xs:element type="base:recordType" name="record"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

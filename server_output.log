@@ -1,0 +1,50 @@
+
+🚀 Comprehensive SOAP Server successfully started!
+📍 Server URL: http://localhost:8000
+
+📋 Available Services:
+   🔧 calculator: Add, Subtract, Multiply, Divide
+   🔧 rpBasicAuth: process
+   🔧 MeteringService: echo
+   🔧 RefParamSoap11: echo, echoOneway
+   🔧 RefParamSoap12: echo, echoOneway
+   🔧 HeaderExtnAttribService: echoHeaderExtnAttributes
+
+📄 WSDL Endpoints:
+   📄 http://localhost:8000/calculator/calculator.wsdl
+   📄 http://localhost:8000/rpBasicAuth/rpBasicAuth.wsdl
+   📄 http://localhost:8000/MeteringService/MeteringService.wsdl
+   📄 http://localhost:8000/RefParamSoap11/RefParamSoap11.wsdl
+   📄 http://localhost:8000/RefParamSoap12/RefParamSoap12.wsdl
+   📄 http://localhost:8000/HeaderExtnAttribService/HeaderExtnAttribService.wsdl
+
+🔧 SOAP Endpoints:
+   🔧 POST http://localhost:8000/soap/calculator
+   🔧 POST http://localhost:8000/soap/rpBasicAuth
+   🔧 POST http://localhost:8000/soap/MeteringService
+   🔧 POST http://localhost:8000/soap/RefParamSoap11
+   🔧 POST http://localhost:8000/soap/RefParamSoap12
+   🔧 POST http://localhost:8000/soap/HeaderExtnAttribService
+
+📁 Import Files:  http://localhost:8000/{service}/{filename}
+🏠 Home Page:     http://localhost:8000/
+🧪 Test Client:   http://localhost:8000/test-client.html
+
+💡 Features:
+   • Multiple WSDL services supported
+   • Separate endpoints for each service
+   • Service-specific file serving modules
+   • All imports and XSD files served
+   • Raw XML processing (no SOAP libraries)
+   • Service-specific operation handling
+
+Ready to accept SOAP requests!
+    
+📨 Received SOAP request for HeaderExtnAttribService
+🔍 Parsed SOAP envelope
+⚡ Operation detected: echoHeaderExtnAttributes (Service: HeaderExtnAttribService)
+🛠️ Handling operation: HeaderExtnAttribService:echoHeaderExtnAttributes { 'typ:echoRequest': { 'base:request': { 'base:record': [Object] } } }
+🛠️ Handling HeaderExtnAttribService operation: echoHeaderExtnAttributes { 'typ:echoRequest': { 'base:request': { 'base:record': [Object] } } }
+Payload: { 'base:record': { 'base:value': '"valdfd "' } }
+Header: { 'base:record': { 'base:value': '"putin"' } }
+✅ Successfully processed HeaderExtnAttribService:echoHeaderExtnAttributes

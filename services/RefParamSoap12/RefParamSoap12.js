@@ -1,9 +1,9 @@
 const xml2js = require('xml2js');
 
 const WSDL_CONFIG = {
-    file: 'MeteringService.wsdl',
-    namespace: 'http://metering.mock.com/',
-    operations: ['echo']
+    file: 'RefParamSoap12.wsdl',
+    namespace: 'http://wsa/refparam',
+    operations: ['echo', 'echoOneway']
 };
 
 // Helper function to extract values that handles namespace prefixes
@@ -21,42 +21,39 @@ function getValue(obj, key) {
     return undefined;
 }
 
-// MeteringService operation handlers
+// RefParamSoap12 operation handlers
 function handleOperation(operationName, args, soapHeader) {
-    console.log(`🛠️ Handling MeteringService operation: ${operationName}`, args);
+    console.log(`🛠️ Handling RefParamSoap12 operation: ${operationName}`, args);
 
     switch (operationName) {
         case 'echo':
             return handleEcho(args);
+        case 'echoOneway':
+            return handleEchoOneway(args);
         default:
-            throw new Error(`Unsupported MeteringService operation: ${operationName}`);
+            throw new Error(`Unsupported RefParamSoap12 operation: ${operationName}`);
     }
 }
 
 function handleEcho(args) {
-    const inputCounter = getValue(args, 'inputCounter') || '1';
-    const inputString = getValue(args, 'inputString') || '';
-
-    const counter = parseInt(inputCounter);
-    const repeatCount = isNaN(counter) || counter < 1 ? 1 : counter;
-
-    const outputStrings = [];
-    for (let i = 0; i < repeatCount; i++) {
-        // Create 2^i repetitions of the input string, joined with " - "
-        const repetitions = Math.pow(2, i);
-        const repeatedString = Array(repetitions).fill(inputString).join(' - ');
-        outputStrings.push(repeatedString);
-    }
-
+    const message = getValue(args, 'message') || '';
     return {
-        outputString: outputStrings
+        return: message
     };
+}
+
+function handleEchoOneway(args) {
+    const msg = getValue(args, 'msg') || '';
+    console.log(`📨 One-way message received: ${msg}`);
+    // One-way operation - return special marker
+    return { __oneWay: true };
 }
 
 function buildSoapResponse(operationName, result) {
     const builder = new xml2js.Builder();
 
     const responseName = `${operationName}Response`;
+    const resultKey = `return`;
 
     const xmlObj = {
         'soap:Envelope': {
@@ -66,7 +63,7 @@ function buildSoapResponse(operationName, result) {
             },
             'soap:Body': {
                 [`tns:${responseName}`]: {
-                    [`tns:outputString`]: result.outputString
+                    [`tns:${resultKey}`]: result[resultKey]
                 }
             }
         }

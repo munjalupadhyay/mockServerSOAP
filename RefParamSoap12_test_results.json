@@ -1,0 +1,12 @@
+[
+  {
+    "operation": "echo",
+    "request": "<soapenv:Envelope xmlns:ref=\"http://wsa/refparam\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ref:echo><ref:message>Hello World from RefParamSoap12</ref:message></ref:echo></soapenv:Body></soapenv:Envelope>",
+    "response": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:tns=\"http://wsa/refparam\">\n  <soap:Body>\n    <tns:echoResponse>\n      <tns:return>Hello World from RefParamSoap12</tns:return>\n    </tns:echoResponse>\n  </soap:Body>\n</soap:Envelope>"
+  },
+  {
+    "operation": "echoOneway",
+    "request": "<soapenv:Envelope xmlns:ref=\"http://wsa/refparam\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><ref:echoOneway><ref:msg>One-way message from RefParamSoap12</ref:msg></ref:echoOneway></soapenv:Body></soapenv:Envelope>",
+    "response": ""
+  }
+]

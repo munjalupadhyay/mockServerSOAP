@@ -22,7 +22,7 @@ function getValue(obj, key) {
 }
 
 // RefParamSoap11 operation handlers
-function handleOperation(operationName, args) {
+function handleOperation(operationName, args, soapHeader) {
     console.log(`🛠️ Handling RefParamSoap11 operation: ${operationName}`, args);
 
     switch (operationName) {

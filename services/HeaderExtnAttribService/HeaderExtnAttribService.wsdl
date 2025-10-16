@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.10-b140319.1121 svn-revision#7b34660d6bc70e587e8ec81a17e4d76af68816a6. --><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:base="http://mock.service.com/types/base" xmlns:extn="http://mock.service.com/types/extn" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://mock.service.com/" xmlns:types="http://mock.service.com/types" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="HeaderExtnAttribService" targetNamespace="http://mock.service.com/">
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" wsu:Id="wss_username_token_service_policy">
+<sp:SupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssUsernameToken10/>
+</wsp:Policy>
+</sp:UsernameToken>
+</wsp:Policy>
+</sp:SupportingTokens>
+</wsp:Policy>
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+            <xs:import namespace="http://mock.service.com/types/base" schemaLocation="xsd2.xsd"/>
+            <xs:import namespace="http://mock.service.com/types/extn" schemaLocation="xsd3.xsd"/>
+            <xs:import namespace="http://mock.service.com/types" schemaLocation="xsd1.xsd"/>
+        </xs:schema>
+    </types>
+    <message name="echoRequest">
+        <part name="payload" element="types:echoRequest"/>
+    </message>
+    <message name="echoResponse">
+        <part name="response" element="types:echoResponse"/>
+    </message>
+    <message name="echoHeader">
+        <part name="header" element="types:echoHeader"/>
+    </message>
+    <portType name="HeaderExtnAttribPortType">
+        <operation name="echoHeaderExtnAttributes">
+            <input name="echoRequest" message="tns:echoRequest"/>
+            <output name="echoResponse" message="tns:echoResponse"/>
+        </operation>
+    </portType>
+    <binding name="HeaderExtnAttribBinding" type="tns:HeaderExtnAttribPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#wss_username_token_service_policy" wsdl:required="false"/>
+        <operation name="echoHeaderExtnAttributes">
+            <soap:operation soapAction="echoHeaderExtnAttributes"/>
+            <input name="echoRequest">
+                <soap:header message="tns:echoHeader" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </input>
+            <output name="echoResponse">
+                <soap:header message="tns:echoHeader" part="header" use="literal"/>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="HeaderExtnAttribService">
+        <port name="HeaderExtnAttribPort" binding="tns:HeaderExtnAttribBinding">
+            <soap:address location="http://localhost:8000/soap/HeaderExtnAttribService"/>
+        </port>
+    </service>
+</definitions>
