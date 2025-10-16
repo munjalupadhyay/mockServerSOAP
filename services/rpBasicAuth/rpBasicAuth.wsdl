@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.10-b140319.1121 svn-revision#7b34660d6bc70e587e8ec81a17e4d76af68816a6. -->
+<wsdl:definitions
+	xmlns:client="http://xmlns.oracle.com/rp_WS_Basic_Authentication_APP/rp_WS_Basic_Authentication/rp_Basic_Authentication_WS"
+	xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="rp_Basic_Authentication_WS" targetNamespace="http://xmlns.oracle.com/rp_WS_Basic_Authentication_APP/rp_WS_Basic_Authentication/rp_Basic_Authentication_WS">
+	<wsdl:documentation>
+		<abstractWSDL>http://sca00jrf.us.oracle.com:7003/soa-infra/services/default/rp_WS_Basic_Authentication!1.0/WSDLs/rp_Basic_Authentication_WS.wsdl</abstractWSDL>
+	</wsdl:documentation>
+	<plnk:partnerLinkType name="rp_Basic_Authentication_WS">
+		<plnk:role name="rp_Basic_Authentication_WSProvider" portType="client:rp_Basic_Authentication_WS"/>
+	</plnk:partnerLinkType>
+	<wsdl:types>
+		<schema
+			xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://xmlns.oracle.com/rp_WS_Basic_Authentication_APP/rp_WS_Basic_Authentication/rp_Basic_Authentication_WS" schemaLocation="http://localhost:8000/rpBasicAuthWS_xsd1.xsd"/>
+		</schema>
+	</wsdl:types>
+	<wsdl:message name="rp_Basic_Authentication_WSRequestMessage">
+		<wsdl:part name="payload" element="client:process"/>
+	</wsdl:message>
+	<wsdl:message name="rp_Basic_Authentication_WSResponseMessage">
+		<wsdl:part name="payload" element="client:processResponse"/>
+	</wsdl:message>
+	<wsdl:portType name="rp_Basic_Authentication_WS">
+		<wsdl:operation name="process">
+			<wsdl:input message="client:rp_Basic_Authentication_WSRequestMessage"/>
+			<wsdl:output message="client:rp_Basic_Authentication_WSResponseMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="rp_Basic_Authentication_WSBinding" type="client:rp_Basic_Authentication_WS">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="process">
+			<soap:operation style="document" soapAction="process"/>
+			<wsdl:input>
+				<soap:body use="literal"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="rp_basic_authentication_ws_client_ep">
+		<wsdl:port name="rp_Basic_Authentication_WS_pt" binding="client:rp_Basic_Authentication_WSBinding">
+			<soap:address location="http://oic-adapters-02.ad1.devintegratiphx.oraclevcn.com:7001/icssoapadaptermockservices/qacomposite/rpBasicAuthWS"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
