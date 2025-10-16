@@ -7,10 +7,12 @@ const app = express();
 // Import service handlers
 const calculatorService = require('./services/calculator/calculator');
 const rpBasicAuthService = require('./services/rpBasicAuth/rpBasicAuth');
+const meteringService = require('./services/MeteringService/MeteringService');
 
 // Import file serving modules
 const calculatorFiles = require('./services/calculator/calculatorFiles');
 const rpBasicAuthFiles = require('./services/rpBasicAuth/rpBasicAuthFiles');
+const meteringFiles = require('./services/MeteringService/MeteringServiceFiles');
 
 // Middleware to parse XML
 app.use(express.text({ type: 'text/xml' }));
@@ -26,12 +28,18 @@ const SERVICES = {
         ...rpBasicAuthService.WSDL_CONFIG,
         dir: 'rpBasicAuth',
         handler: rpBasicAuthService
+    },
+    MeteringService: {
+        ...meteringService.WSDL_CONFIG,
+        dir: 'MeteringService',
+        handler: meteringService
     }
 };
 
 // Use service-specific file routers
 app.use('/calculator', calculatorFiles.createFileRouter());
 app.use('/rpBasicAuth', rpBasicAuthFiles.createFileRouter());
+app.use('/MeteringService', meteringFiles.createFileRouter());
 
 // Handle SOAP requests for calculator service
 app.post('/soap/calculator', async (req, res) => {
@@ -41,6 +49,11 @@ app.post('/soap/calculator', async (req, res) => {
 // Handle SOAP requests for rpBasicAuth service
 app.post('/soap/rpBasicAuth', async (req, res) => {
     await handleSoapRequest('rpBasicAuth', req, res);
+});
+
+// Handle SOAP requests for MeteringService
+app.post('/soap/MeteringService', async (req, res) => {
+    await handleSoapRequest('MeteringService', req, res);
 });
 
 // Common SOAP request handler
@@ -57,7 +70,21 @@ async function handleSoapRequest(serviceName, req, res) {
         console.log('🔍 Parsed SOAP envelope');
 
         // Extract the SOAP Body and find the operation
-        const soapBody = result['soap:Envelope']?.['soap:Body'] || result.Envelope?.Body;
+        // Handle any namespace prefix for the envelope
+        let soapBody = null;
+        for (const key of Object.keys(result)) {
+            if (key.endsWith(':Envelope') || key === 'Envelope') {
+                const envelope = result[key];
+                // Try different variations of Body
+                for (const bodyKey of Object.keys(envelope)) {
+                    if (bodyKey.endsWith(':Body') || bodyKey === 'Body') {
+                        soapBody = envelope[bodyKey];
+                        break;
+                    }
+                }
+                if (soapBody) break;
+            }
+        }
         if (!soapBody) {
             throw new Error('No SOAP Body found');
         }
@@ -212,6 +239,7 @@ app.get('/', (req, res) => {
                 <ul>
                     <li><strong>rpBasicAuth:</strong> process</li>
                     <li><strong>Calculator:</strong> Add, Subtract, Multiply, Divide</li>
+                    <li><strong>MeteringService:</strong> echo</li>
                 </ul>
 
                 <h2>Test Client:</h2>

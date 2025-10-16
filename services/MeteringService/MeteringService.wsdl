@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.10-b140319.1121 svn-revision#7b34660d6bc70e587e8ec81a17e4d76af68816a6. --><definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://metering.mock.com/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="MeteringServiceImplService" targetNamespace="http://metering.mock.com/">
+<wsp:Policy xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" wsu:Id="wss_username_token_over_ssl_service_policy">
+<sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:AlgorithmSuite>
+<wsp:Policy>
+<sp:Basic128/>
+</wsp:Policy>
+</sp:AlgorithmSuite>
+<sp:TransportToken>
+<wsp:Policy>
+<sp:HttpsToken RequireClientCertificate="false">
+<wsp:Policy/>
+</sp:HttpsToken>
+</wsp:Policy>
+</sp:TransportToken>
+<sp:Layout>
+<wsp:Policy>
+<sp:Lax/>
+</wsp:Policy>
+</sp:Layout>
+<sp:IncludeTimestamp/>
+</wsp:Policy>
+</sp:TransportBinding>
+<sp:SupportingTokens xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+<wsp:Policy>
+<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+<wsp:Policy>
+<sp:WssUsernameToken10/>
+</wsp:Policy>
+</sp:UsernameToken>
+</wsp:Policy>
+</sp:SupportingTokens>
+</wsp:Policy>
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://metering.mock.com/" version="1.0">
+            <xs:element name="echo" type="tns:echo"/>
+            <xs:element name="echoResponse" type="tns:echoResponse"/>
+            <xs:complexType name="echo">
+                <xs:sequence>
+                    <xs:element name="inputCounter" type="xs:string"/>
+                    <xs:element name="inputString" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="echoResponse">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" name="outputString" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </types>
+    <message name="echo">
+        <part name="parameters" element="tns:echo"/>
+    </message>
+    <message name="echoResponse">
+        <part name="parameters" element="tns:echoResponse"/>
+    </message>
+    <portType name="MeteringPortType">
+        <operation name="echo">
+            <input message="tns:echo" wsam:Action="http://metering.mock.com/MeteringService/echoRequest"/>
+            <output message="tns:echoResponse" wsam:Action="http://metering.mock.com/MeteringService/echoResponse"/>
+        </operation>
+    </portType>
+    <binding name="MeteringBinding" type="tns:MeteringPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#wss_username_token_over_ssl_service_policy" wsdl:required="false"/>
+        <operation name="echo">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="MeteringService">
+        <port name="MeteringPort" binding="tns:MeteringBinding">
+            <soap:address location="https://oic-adapters-02.ad1.devintegratiphx.oraclevcn.com:7002/icssoapadaptermockservices/devmocks/MeteringService"/>
+        </port>
+    </service>
+</definitions>
